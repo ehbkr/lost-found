@@ -8,7 +8,7 @@ const STARTER_ITEMS: Item[] = [
 { id: '3', title: 'USB-C charger', place: 'Room B12' },
 ];
 export default function Index() {
-const [items, setItems] = useState<Item[]>(STARTER_ITEMS);
+const [items, setItems] = useState<Item[]>([]);
 const [title, setTitle] = useState('');
 const [place, setPlace] = useState('');
 const canAdd = title.trim() !== '' && place.trim() !== '';
