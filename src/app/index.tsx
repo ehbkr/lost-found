@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
 screen: {
 flex: 1,
 padding: 16,
-backgroundColor: '#ffffff',
+backgroundColor: '#f3f4f6',
 },
 count: {
 color: '#6b7280',
