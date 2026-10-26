@@ -1,0 +1,1 @@
+why does an app need an empty state?
