@@ -1,56 +1,34 @@
 import ItemCard from '@/components/ItemCard';
-import { Item } from '@/types';
-import { useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-const STARTER_ITEMS: Item[] = [
-];
+import { useItems } from '@/context/ItemsContext';
+import { Link } from 'expo-router';
+import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 export default function Index() {
-const [items, setItems] = useState<Item[]>(STARTER_ITEMS);
-const [title, setTitle] = useState('');
-const [place, setPlace] = useState('');
-const canAdd = title.trim() !== '' && place.trim() !== '';
-function addItem() {
-if (!canAdd) return;
-const newItem: Item = {
-id: Date.now().toString(),
-title: title.trim(),
-place: place.trim(),
-};
-setItems([newItem, ...items]);
-setTitle('');
-setPlace('');
-}
+const { items } = useItems();
+const waiting = items.filter((item) => !item.claimed).length;
 return (
 <View style={styles.screen}>
-<Text style={styles.count}>{items.length} items reported</Text>
-<View style={styles.form}>
-<TextInput
-style={styles.input}
-placeholder="What did you find?"
-value={title}
-onChangeText={setTitle}
-/>
-<TextInput
-style={styles.input}
-placeholder="Where?"
-value={place}
-onChangeText={setPlace}
-/>
-<Pressable
-style={[styles.button, !canAdd && styles.buttonDisabled]}
-onPress={addItem}
-disabled={!canAdd}
->
-<Text style={styles.buttonText}>Add item</Text>
+<Text style={styles.count}>
+{items.length} items reported · {waiting} still waiting for their owner
+</Text>
+<Link href="/add" asChild>
+<Pressable style={styles.button}>
+<Text style={styles.buttonText}>+ Report an item</Text>
 </Pressable>
-</View>
+</Link>
 <FlatList
 data={items}
 keyExtractor={(item) => item.id}
-renderItem={({ item }) => <ItemCard title={item.title} place={item.place} />}
+renderItem={({ item }) => (
+<Link href={{ pathname: '/item/[id]', params: { id: item.id } }} asChild>
+<Pressable>
+<ItemCard title={item.title} place={item.place} claimed={item.claimed} />
+</Pressable>
+</Link>
+)}
 ItemSeparatorComponent={Separator}
 ListEmptyComponent={<Text>Nothing reported yet.</Text>}
 />
+<Text style={styles.footer}>Running on {Platform.OS}</Text>
 </View>
 );
 }
@@ -67,26 +45,12 @@ count: {
 color: '#6b7280',
 marginBottom: 12,
 },
-form: {
-gap: 9,
-marginBottom: 16,
-},
-input: {
-backgroundColor: '#ffffff',
-borderWidth: 1,
-borderColor: '#d1d5db',
-borderRadius: 8,
-padding: 12,
-fontSize: 16,
-},
 button: {
 backgroundColor: '#2563eb',
 borderRadius: 8,
 padding: 14,
 alignItems: 'center',
-},
-buttonDisabled: {
-opacity: 0.4,
+marginBottom: 16,
 },
 buttonText: {
 color: '#ffffff',
@@ -95,5 +59,10 @@ fontSize: 16,
 },
 separator: {
 height: 10,
+},
+footer: {
+textAlign: 'center',
+color: '#9ca3af',
+paddingTop: 8,
 },
 });
