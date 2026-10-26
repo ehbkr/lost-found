@@ -61,14 +61,14 @@ const styles = StyleSheet.create({
 screen: {
 flex: 1,
 padding: 16,
-backgroundColor: '#f3f4f6',
+backgroundColor: '#ffffff',
 },
 count: {
 color: '#6b7280',
 marginBottom: 12,
 },
 form: {
-gap: 8,
+gap: 9,
 marginBottom: 16,
 },
 input: {
